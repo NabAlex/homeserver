@@ -16,6 +16,10 @@ func sendBadParams(w http.ResponseWriter) {
 	w.WriteHeader(http.StatusBadRequest)
 }
 
+type DataResponse struct {
+	Data interface{} `json:"data"`
+}
+
 func simpleParam(r *http.Request, key string) (string, bool) {
 	value, ok := r.Form[key]
 	if !ok || len(value) != 1 {
@@ -27,7 +31,7 @@ func simpleParam(r *http.Request, key string) (string, bool) {
 
 func GetInfo(w http.ResponseWriter, r *http.Request) {
 	devices := device.GetDevices()
-	bytes, err := json.Marshal(&devices)
+	bytes, err := json.Marshal(&DataResponse{devices})
 	if err != nil {
 		log.Println(err)
 		return
