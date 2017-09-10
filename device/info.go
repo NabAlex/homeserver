@@ -53,9 +53,11 @@ func InitDevice(filename string) error {
 	for _, device := range devices {
 		setOutput(device.Pin)
 		setState(device.Pin, StateOff)
-		deviceInfo[device.Name] = &DeviceStatus{
-			Pin: device.Pin,
-			State: StateOff,
+		if device.Name != "disable" {
+			deviceInfo[device.Name] = &DeviceStatus{
+				Pin:   device.Pin,
+				State: StateOff,
+			}
 		}
 	}
 
