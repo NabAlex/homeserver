@@ -27,11 +27,11 @@ type Device struct {
 }
 
 type DeviceStatus struct {
-	Pin uint
-	State DeviceState
+	Pin uint			`json:"pin"`
+	State DeviceState	`json:"state"`
 }
 
-var deviceInfo map[string]DeviceStatus
+var deviceInfo map[string]*DeviceStatus
 
 func InitDevice(filename string) error {
 	bytes, err := ioutil.ReadFile(filename)
@@ -44,9 +44,10 @@ func InitDevice(filename string) error {
 		return err
 	}
 
-	deviceInfo = make(map[string]DeviceStatus)
+	deviceInfo = make(map[string]*DeviceStatus)
 	for _, device := range devices {
-		deviceInfo[device.Name] = DeviceStatus{
+		setPin(device.Pin, StateOff)
+		deviceInfo[device.Name] = &DeviceStatus{
 			Pin: device.Pin,
 			State: StateOff,
 		}
@@ -62,5 +63,18 @@ func InitDevice(filename string) error {
 
 func GetDeviceStatus(name string) (DeviceStatus, bool) {
 	status, ok := deviceInfo[name]
-	return status, ok
+	return *status, ok
+}
+
+func SetDeviceStatus(name string, state DeviceState) {
+	if _, ok := deviceInfo[name]; !ok {
+		return
+	}
+
+	setPin(deviceInfo[name].Pin, state)
+	deviceInfo[name].State = state
+}
+
+func GetDevices() map[string]*DeviceStatus {
+	return deviceInfo
 }

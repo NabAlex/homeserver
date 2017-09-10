@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"log"
 	"homeserver/device"
+	"encoding/json"
+	"fmt"
 )
 
 func sendEasyOk(w http.ResponseWriter) {
@@ -21,6 +23,17 @@ func simpleParam(r *http.Request, key string) (string, bool) {
 	}
 
 	return value[0], true
+}
+
+func GetInfo(w http.ResponseWriter, r *http.Request) {
+	devices := device.GetDevices()
+	bytes, err := json.Marshal(&devices)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	fmt.Fprintf(w, "%s", string(bytes))
 }
 
 func EnableDevice(w http.ResponseWriter, r *http.Request) {
@@ -52,7 +65,10 @@ func EnableDevice(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	device.SetPin(status.Pin, state)
+	if status.State != state {
+		device.SetDeviceStatus(devicename, state)
+	}
+
 	sendEasyOk(w)
 }
 
@@ -63,13 +79,13 @@ func main() {
 		return
 	}
 
+	http.HandleFunc("/getinfo", GetInfo)
 	http.HandleFunc("/enable", EnableDevice)
 
+	log.Println("Start server", ":9090")
 	err = http.ListenAndServe(":9090", nil)
 	if err != nil {
 		log.Fatal("Fail: ", err)
 		return
 	}
-
-	log.Println("Start server", ":9090")
 }

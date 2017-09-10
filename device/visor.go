@@ -6,7 +6,7 @@ func initVisor() error {
 	return rpio.Open()
 }
 
-func SetPin(pinNumber uint, state DeviceState) {
+func setPin(pinNumber uint, state DeviceState) {
 	pin := rpio.Pin(pinNumber)
 	pin.Output()
 	switch state {
