@@ -44,6 +44,11 @@ func InitDevice(filename string) error {
 		return err
 	}
 
+	err = initVisor()
+	if err != nil {
+		return err
+	}
+
 	deviceInfo = make(map[string]*DeviceStatus)
 	for _, device := range devices {
 		setPin(device.Pin, StateOff)
@@ -51,11 +56,6 @@ func InitDevice(filename string) error {
 			Pin: device.Pin,
 			State: StateOff,
 		}
-	}
-
-	err = initVisor()
-	if err != nil {
-		return err
 	}
 
 	return nil
