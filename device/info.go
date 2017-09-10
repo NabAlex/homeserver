@@ -51,7 +51,8 @@ func InitDevice(filename string) error {
 
 	deviceInfo = make(map[string]*DeviceStatus)
 	for _, device := range devices {
-		setPin(device.Pin, StateOff)
+		setOutput(device.Pin)
+		setState(device.Pin, StateOff)
 		deviceInfo[device.Name] = &DeviceStatus{
 			Pin: device.Pin,
 			State: StateOff,
@@ -71,7 +72,7 @@ func SetDeviceStatus(name string, state DeviceState) {
 		return
 	}
 
-	setPin(deviceInfo[name].Pin, state)
+	setState(deviceInfo[name].Pin, state)
 	deviceInfo[name].State = state
 }
 
