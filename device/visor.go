@@ -14,14 +14,15 @@ func setOutput(pinNumber uint) {
 	pin.Output()
 }
 
-func setStateHighImpl(obj interface{}) {
-	pin := obj.(rpio.Pin)
-	pin.High()
-}
-
-func setStateLowImpl(obj interface{}) {
+/* with relay %)*/
+func setStateOnImpl(obj interface{}) {
 	pin := obj.(rpio.Pin)
 	pin.Low()
+}
+
+func setStateOffImpl(obj interface{}) {
+	pin := obj.(rpio.Pin)
+	pin.High()
 }
 
 func setState(pinNumber uint, state DeviceState) {
@@ -29,9 +30,9 @@ func setState(pinNumber uint, state DeviceState) {
 
 	switch state {
 	case StateOn:
-		gpioPool.ThrowTask(setStateHighImpl, pin)
+		gpioPool.ThrowTask(setStateOnImpl, pin)
 	case StateOff:
-		gpioPool.ThrowTask(setStateLowImpl, pin)
+		gpioPool.ThrowTask(setStateOffImpl, pin)
 	}
 }
 
