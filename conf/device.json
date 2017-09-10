@@ -1,0 +1,9 @@
+{
+  "devices": [
+    {"name": "lobby", "pin": 10},
+    {"name": "toilet", "pin": 11},
+    {"name": "kitchen", "pin": 12},
+    {"name": "balcony", "pin": 16},
+    {"name": "room", "pin": 17}
+  ]
+}
